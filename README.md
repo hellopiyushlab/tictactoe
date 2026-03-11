@@ -6,3 +6,5 @@ Tic Tac Toe for Odin Project
 - [x] function for not allowing any input other than 0 to 8
 - [x] game draw function
 - [x] reload the game with clean slate
+- [ ] write basic CSS
+- [ ] connect DOM with JS
