@@ -55,11 +55,14 @@ const gameplay = (() => {
         }
         console.log(tictactoeArray);
     }
-    const checkWinner = (playerOne, playerTwo) => {
+    const checkWinner = () => {
         // code to check if there is a winner
-        let someoneWon = false;
+        let someoneWon = true;
 
-        // if there is a winner, then who?
+        // if there is a winner, break the gameloop
+        if (someoneWon = true) {
+            gameLoop = false;
+        }
     }
     return {
         gameStart,
@@ -69,9 +72,9 @@ const gameplay = (() => {
 })()
 
 gameplay.gameStart(playerOne, playerTwo);
-const gameLoop = true;
+let gameLoop = true;
 while (gameLoop === true) {
-    const choice = prompt("choose between 1 and 9: ");
-    gameplay.makeMove(choice); // makeMove is also changing the player
-    // gameplay.checkWinner(playerOne, playerTwo);
+    let choice = prompt("choose a number between 1 and 10");
+    gameplay.makeMove(choice);
+    gameplay.checkWinner();
 }
