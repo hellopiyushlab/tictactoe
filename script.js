@@ -26,8 +26,12 @@ const gameplay = (() => {
     // this function will be called the moment page is loaded
     const gameStart = (playerOne) => {
         // for now, starting with playerOne by default  
+        let gameLoop = true;
         currentPlayer = playerOne;
         console.log("game started");
+        while (gameLoop) {
+            gameplay.askChoice();
+        }   
     }
 
     const askChoice = () => {
@@ -62,8 +66,11 @@ const gameplay = (() => {
             // we can just check that to know who won
             let winner = currentPlayer;
             console.log(`${winner.name} won the game!`);
+            askForRestart();
         } else if (gameplay.isItDraw(tictactoeArray)) {
             drawScreen();
+            gameLoop = false;
+            askForRestart();
         }
 
         // if there is a winner, loop would've broken
@@ -140,6 +147,16 @@ const gameplay = (() => {
        console.log("it's a draw!");
     }
 
+    const askForRestart = () => {
+        let doRestart = confirm("Do you want to restart the game?");
+        if (doRestart) {
+            tictactoeArray = [];
+            gameplay.gameStart(playerOne);
+        } else {
+            // do nothing
+        }
+    }
+
     // this linear search algorithm will find the location of the choice in the winning condition arrays
     const linearSearch = (array, choice) => {
         for (let i = 0; i < array.length; i++) {
@@ -151,7 +168,7 @@ const gameplay = (() => {
         }
         return [-1, -1];
     }
-
+    
     return {
         gameStart,
         makeMove,
@@ -161,13 +178,8 @@ const gameplay = (() => {
         askChoice,
         isItDraw,
         drawScreen,
+        askForRestart
     }
 })()
 
 gameplay.gameStart(playerOne);
-let gameLoop = true;
-
-// NOTE: We need to avoid this while loop when working with events in browser
-while (gameLoop === true) {
-    gameplay.askChoice();
-}

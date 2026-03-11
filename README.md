@@ -5,4 +5,4 @@ Tic Tac Toe for Odin Project
 - [x] function for not allowing same move twice
 - [x] function for not allowing any input other than 0 to 8
 - [x] game draw function
-- [ ] reload the game with clean slate
+- [x] reload the game with clean slate
