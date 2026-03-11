@@ -8,8 +8,8 @@ function createPlayer (name, marker) {
         this.marker = marker
     }
 }
-const playerOne = new createPlayer("Player One", "O");
-const playerTwo = new createPlayer("Player Two", "X");
+const playerOne = new createPlayer("Player One", "X");
+const playerTwo = new createPlayer("Player Two", "O");
 
 // immediately invoked function expression
 // for all the game related functions
@@ -24,11 +24,31 @@ const gameplay = (() => {
 
     // function that starts the game
     // this function will be called the moment page is loaded
-    const gameStart = (playerOne, playerTwo) => {
+    const gameStart = (playerOne) => {
         // for now, starting with playerOne by default  
         currentPlayer = playerOne;
         console.log("game started");
     }
+
+    const askChoice = () => {
+        internalChoice = prompt("enter a number from 1 to 9");
+        gameplay.canBeFilled(internalChoice);
+    }
+
+    // function to check if the chosen position is filled already
+    const canBeFilled = (choice) => {
+        if (choice > 9) {
+            console.log("enter a smaller number you idiot");
+        } else {
+            if (choice in tictactoeArray) {
+                console.log("position already filled");
+                return false;
+            } else {
+                gameplay.makeMove(choice);
+            }
+        }
+    }
+
 
     // function to make a move
     const makeMove = (choice) => {
@@ -38,7 +58,12 @@ const gameplay = (() => {
         let resultOfCheckWinner = gameplay.checkWinner(choice);
         if (resultOfCheckWinner) {
             gameLoop = false;
-            console.log("someone won, idk who tho")
+            // since the current player has not changes yet, 
+            // we can just check that to know who won
+            let winner = currentPlayer;
+            console.log(`${winner.name} won the game!`);
+        } else if (gameplay.isItDraw(tictactoeArray)) {
+            drawScreen();
         }
 
         // if there is a winner, loop would've broken
@@ -51,6 +76,8 @@ const gameplay = (() => {
         }
         console.log(tictactoeArray);
     }
+
+    
     const checkWinner = (choice) => {
         // code to check if there is a winner
 
@@ -86,7 +113,7 @@ const gameplay = (() => {
                 tictactoeArray[columns[positionOfChoiceInColumns[0]][0]] === tictactoeArray[columns[positionOfChoiceInColumns[0]][2]]
             ) {
                 return true;
-            }
+            } 
         }
         // check within condition within diagnols 
         if (positionOfChoiceInDiagnols[0] !== -1) {
@@ -99,6 +126,20 @@ const gameplay = (() => {
             } 
         }
     }
+
+    // to check for draw
+    const isItDraw = () => {
+        if ( tictactoeArray.length === 9 && tictactoeArray.length === Object.keys(tictactoeArray).length) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    const drawScreen = () => {
+       console.log("it's a draw!");
+    }
+
     // this linear search algorithm will find the location of the choice in the winning condition arrays
     const linearSearch = (array, choice) => {
         for (let i = 0; i < array.length; i++) {
@@ -110,17 +151,23 @@ const gameplay = (() => {
         }
         return [-1, -1];
     }
+
     return {
         gameStart,
         makeMove,
         checkWinner,
-        linearSearch
+        linearSearch,
+        canBeFilled,
+        askChoice,
+        isItDraw,
+        drawScreen,
     }
 })()
 
-gameplay.gameStart(playerOne, playerTwo);
+gameplay.gameStart(playerOne);
 let gameLoop = true;
+
+// NOTE: We need to avoid this while loop when working with events in browser
 while (gameLoop === true) {
-    let choice = prompt("choose a number between 1 and 10");
-    gameplay.makeMove(choice);
+    gameplay.askChoice();
 }
