@@ -94,13 +94,13 @@ const gameplay = (() => {
         let columns     = [ [0,3,6], 
                             [1,4,7], 
                             [2,5,8] ];
-        let diagnols    = [ [0,4,8],
+        let diagonals    = [ [0,4,8],
                             [2,4,6] ];
 
         // finding the position of choice in the arrays
         positionOfChoiceInRows =        gameplay.linearSearch(rows, choice); // [0,0]
         positionOfChoiceInColumns =     gameplay.linearSearch(columns, choice);
-        positionOfChoiceInDiagnols =    gameplay.linearSearch(diagnols, choice);
+        positionOfChoiceInDiagonals =    gameplay.linearSearch(diagonals, choice);
 
         // check winning condition within rows
         if (positionOfChoiceInRows[0] !== -1) {
@@ -122,12 +122,12 @@ const gameplay = (() => {
                 return true;
             } 
         }
-        // check within condition within diagnols 
-        if (positionOfChoiceInDiagnols[0] !== -1) {
+        // check within condition within diagonals 
+        if (positionOfChoiceInDiagonals[0] !== -1) {
             if (
-                tictactoeArray[diagnols[positionOfChoiceInDiagnols[0]][0]] === tictactoeArray[diagnols[positionOfChoiceInDiagnols[0]][1]]
+                tictactoeArray[diagonals[positionOfChoiceInDiagonals[0]][0]] === tictactoeArray[diagonals[positionOfChoiceInDiagonals[0]][1]]
                 &&
-                tictactoeArray[diagnols[positionOfChoiceInDiagnols[0]][0]] === tictactoeArray[diagnols[positionOfChoiceInDiagnols[0]][2]]
+                tictactoeArray[diagonals[positionOfChoiceInDiagonals[0]][0]] === tictactoeArray[diagonals[positionOfChoiceInDiagonals[0]][2]]
             ) {
                 return true;
             } 
