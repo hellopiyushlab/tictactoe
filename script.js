@@ -176,7 +176,6 @@ const ttt = (() => {
                 return true;
             } 
         }
-        // TO DO: I may need to enable the following in this:
         else {
             return false;
         }
@@ -205,6 +204,19 @@ const ttt = (() => {
         }
         return [-1, -1];
     }
+
+    // finally, applying some css
+    const changeModeIcon = document.querySelector(".change-mode");
+    changeModeIcon.addEventListener("click", () => {
+        if (changeModeIcon.classList.contains("fa-sun")) {
+            changeModeIcon.classList.remove("fa-sun");
+            changeModeIcon.classList.add("fa-moon");
+        } else {
+            // If it's not a sun, we assume it's a moon (or nothing)
+            changeModeIcon.classList.remove("fa-moon");
+            changeModeIcon.classList.add("fa-sun");
+        }
+    });
     
     
     return {
@@ -220,5 +232,4 @@ const ttt = (() => {
     }
 })()
 
-// ttt.gameStart(playerOne);
 ttt.gameStart();
