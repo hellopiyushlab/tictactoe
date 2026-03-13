@@ -15,137 +15,98 @@ const playerTwo = new createPlayer("Player Two", "O");
 // immediately invoked function expression
 // for all the game related functions
 // storing the functions inside an object
-const gameplay = (() => {
+const ttt = (() => {
 
-    const putEvents = () => {
-        // rather than the divs "boxes" that contains the <i> tags, 
-        // we are putting eventListeners on the empty <i> tags themselves
-        // so that we can then add fontawesome classes on it
-        let blocks = document.querySelectorAll(".marker");
-        blocks.forEach(
-            block => {
-                block.addEventListener(
-                    "click",
-                    (e) => {
-                        console.log(e.target);
-                        // taking the string from data attribute and storing it in index as integer
-                        const index = Number(e.currentTarget.dataset.index);
-                        // now send that index in the takeChoice function
-                        // gameplay.takeChoice(index);
-                        console.log(index);
-                        gameplay.decidePlayer(blocks, index, e.currentTarget);
-                    }
-                )
-            }
-        )
-    }
-
-    // an empty array to store moves
-    // note: there can be empty spaces in JS arrays
+    let currentPlayer = playerOne;
+    let gameActive = true;
     let tictactoeArray = [];
-    
-    // we will start with playerTwo having the control, because
-    // we are always changing the player down the line
-    let currentPlayer = playerTwo;
 
-    // function for starting the game
-    // only calling this from outside for now
-    // TO DO: Re Check above statement
-    const gameStart = (playerOne) => { // we are always starting the game with playerOne, always
-        
-        // initialize the tictactoeArray to empty
-        // it is crucial in case of restarting the game
-        tictactoeArray = [];
-
-        // gameLoop variable is to track if the game is still going on or are we ending it
-        let gameLoop = true;
+    const gameStart = () => {
         currentPlayer = playerOne;
-        console.log("game started");
-        // while gameloop is true, keep taking player choices
-        // TO DO: get rid of the loop, we need another way - loop is not optimal
-        while (gameLoop) {
-            gameplay.takeChoice();
-        }   
+        gameActive = true;
     }
 
-    const takeChoice = (choice) => {
-        // internalChoice = prompt("enter a number from 1 to 9");
-        // .canBeFilled is to check if the place we are placing marker at is occupied or not
-
-        // choice has to be an integer from 0 to 8
-        // send the choice (index) taken from event, and send it to canBeFilled
-        gameplay.canBeFilled(choice);
-    }
-
-    const decidePlayer = (blocks, choice, target) => {
-        if (currentPlayer = playerOne) {
-            currentPlayer = playerTwo;
-        } else if (currentPlayer = playerTwo) {
-            currentPlayer = playerOne;
+   
+    let blocks = document.querySelectorAll(".block");
+    blocks.forEach(
+        block => {
+            block.addEventListener(
+                "click",
+                (e) => {
+                    if (!gameActive) return;
+                    console.log(e.target);
+                    const index = Number(e.currentTarget.dataset.index);
+                    const iconTag = block.querySelector(".marker");
+                    console.log(iconTag);
+                    console.log(index);
+                    let legalMove = preliminaryCheck(index);
+                    if (legalMove) {
+                        ttt.makeMove(currentPlayer.marker, index, iconTag);
+                        let someoneWon = checkWinner(index);
+                        let draw = isItDraw();
+                        if (someoneWon || draw) {
+                            ttt.gameEnd(someoneWon, draw, blocks);
+                        } else {
+                            currentPlayer = changePlayer();
+                        }
+                    }
+                }
+            )
         }
-        gameplay.canBeFilled(blocks, choice, target, currentPlayer);
-    }
+    )
 
-    // function to check if the chosen position is filled already
-    const canBeFilled = (blocks, choice, target, currentPlayer) => {
-        if (choice > 9) { 
-            // TO DO: Can remove this check after DOM Manipulation is properly applied
-            console.log("enter a smaller number you idiot");
-        } else {
-            if (choice in tictactoeArray) {
-                console.log("position already filled");
-                return false;
-            } else {
-                // if the choice is not filled, send the choice to make move
-                gameplay.makeMove(blocks, choice, target, currentPlayer);
-            }
-        }
-    }
+  
+    
 
-
-    // function to make a move
-    const makeMove = (blocks, choice, target, currentPlayer) => {
-        // put the current player marker at the choice index in the tictactoeArray
-        tictactoeArray[choice] = currentPlayer.marker;
-        if (currentPlayer.marker === "X") {
-            target.classList.add("fa-x");
-        } else if (currentPlayer.marker === "O") {
-            target.classList.add("fa-o");
-        }
-
-
-        // it is after each move is made, that we have to check the winner
-        // that is because if there is a winner, there is no need to change player
-        // and we can go straight to game ending
-        let resultOfCheckWinner = gameplay.checkWinner(choice);
-        if (resultOfCheckWinner) {
-            // setting gameLoop to false if winning condition was satisfied
-            // gameLoop = false;
-            // since the current player has not changes yet, 
-            // we can just check that to know who won
-            let winner = currentPlayer;
-            console.log(`${winner.name} won the game!`);
-            askForRestart(blocks);
-        } else if (gameplay.isItDraw(tictactoeArray)) {
-            drawScreen();
-            gameLoop = false;
-            askForRestart(blocks);
-        }
-
-        // if there is a winner, loop would've broken
-        // otherwise,
-        // change the player
+    const changePlayer = () => {
         if (currentPlayer === playerOne) {
-            currentPlayer = playerTwo;
-        } else {
-            currentPlayer = playerOne;
+            return playerTwo;
+        } else if (currentPlayer === playerTwo) {
+            return playerOne;
         }
-        // makeMove functions ends at changing the player
-        // TO DO:   right now the loop exists in the first function that is called, and
-        //          and that loop will only break if gameLoop is set to false
-        console.log(tictactoeArray);
     }
 
+    const gameEnd = (someoneWon, draw, blocks) => {
+        if (someoneWon) {
+            console.log(`${currentPlayer.name} with marker '${currentPlayer.marker}' won!`);
+            gameActive = false;
+        } else if (draw) {
+            console.log("game draw!");
+            gameActive = false;
+        }
+    }
+
+    const restart = (blocks) => {
+        ttt.gameStart();
+        blocks.forEach(block => {
+            iconTag = block.querySelector(".marker");
+            iconTag.classList.remove("fa-o", "fa-x");
+        });
+        tictactoeArray = [];
+    }
+
+    let restartButton = document.querySelector(".restart-button");
+    restartButton.addEventListener("click", () => restart(blocks));
+
+    const makeMove = (marker, index, icon) => {
+        // add the marker in the array
+        tictactoeArray[index] = marker;
+        // show the marker on the screen
+        // according to the marker of current player
+        if (marker === "O") {
+            icon.classList.add("fa-o");
+        } else if (marker === "X") {
+            icon.classList.add("fa-x");
+        }
+    }
+
+    const preliminaryCheck = (index) => {
+        if (index in tictactoeArray) {
+            return false;
+        } else {
+            return true;
+        }
+    }
     
     const checkWinner = (choice) => {
         // code to check if there is a winner
@@ -169,9 +130,9 @@ const gameplay = (() => {
 
         // finding the position of choice in the arrays
         // we are using linear search, that returns an array in [i,j] form
-        positionOfChoiceInRows =        gameplay.linearSearch(rows, choice); // [i,j]
-        positionOfChoiceInColumns =     gameplay.linearSearch(columns, choice);
-        positionOfChoiceInDiagonals =    gameplay.linearSearch(diagonals, choice);
+        let positionOfChoiceInRows =        ttt.linearSearch(rows, choice); // [i,j]
+        let positionOfChoiceInColumns =     ttt.linearSearch(columns, choice);
+        let positionOfChoiceInDiagonals =    ttt.linearSearch(diagonals, choice);
 
         // the linearSearch function returns [-1,-1] if it doesn't find our choice
         // hence, we can have 3 sets of check.
@@ -220,8 +181,6 @@ const gameplay = (() => {
             return false;
         }
     }
-
-    // to check for draw
     const isItDraw = () => {
         // if the length of the array is 9, and all of them are full, there is a draw
         // Object.keys return the keys, in array's case that would be indexes
@@ -233,23 +192,7 @@ const gameplay = (() => {
         }
     }
 
-    const drawScreen = () => {
-       console.log("it's a draw!");
-    }
 
-    const askForRestart = (blocks) => {
-        let doRestart = confirm("Do you want to restart the game?");
-        if (doRestart) {
-            tictactoeArray = [];
-            blocks.forEach(block => {
-                block.classList.remove("fa-o", "fa-x");
-            })
-            // TO DO:   this here would be called from eventListener on the restart button all the time, no need to call it from anywhere else
-            gameplay.putEvents();
-        } else {
-            // do nothing
-        }
-    }
 
     // this linear search algorithm will find the location of the choice in the winning condition arrays
     const linearSearch = (array, choice) => {
@@ -265,19 +208,17 @@ const gameplay = (() => {
     
     
     return {
-        gameStart,
-        makeMove,
         checkWinner,
         linearSearch,
-        canBeFilled,
-        takeChoice,
+        gameStart,
+        preliminaryCheck,
+        makeMove,
         isItDraw,
-        drawScreen,
-        askForRestart,
-        putEvents,
-        decidePlayer
+        gameEnd,
+        changePlayer,
+        restart
     }
 })()
 
-// gameplay.gameStart(playerOne);
-gameplay.putEvents();
+// ttt.gameStart(playerOne);
+ttt.gameStart();
