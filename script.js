@@ -213,7 +213,6 @@ const ttt = (() => {
         window.open("https://github.com/hellopiyushlab/tictactoe", "_blank");
     })
     
-    
     return {
         checkWinner,
         linearSearch,
