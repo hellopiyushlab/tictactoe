@@ -218,6 +218,19 @@ const gameplay = (() => {
         return [-1, -1];
     }
     
+    const putEvents = () => {
+        let blocks = document.querySelectorAll(".marker");
+        blocks.forEach(
+            block => {
+                block.addEventListener(
+                    "click",
+                    (e) => {
+                        console.log(e.target);
+                    }
+                )
+            }
+        )
+    }
     return {
         gameStart,
         makeMove,
@@ -227,8 +240,10 @@ const gameplay = (() => {
         askChoice,
         isItDraw,
         drawScreen,
-        askForRestart
+        askForRestart,
+        putEvents
     }
 })()
 
-gameplay.gameStart(playerOne);
+// gameplay.gameStart(playerOne);
+gameplay.putEvents();
