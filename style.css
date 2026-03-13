@@ -10,7 +10,6 @@ body {
 .header {
     width: 100%;
     box-sizing: border-box;
-    /* background-color: aliceblue; */
 }
 .header i {
     font-size: 24px;
@@ -27,18 +26,26 @@ body {
     justify-content: space-around;
     align-items: center;
     box-sizing: border-box;
-    /* background-color: antiquewhite; */
 }
 .game-board-heading {
     height: 100px;
     width: 100%;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 }
 .game-board-heading h1 {
     font-family: 'Courier New', Courier, monospace;
-    font-size: 55px;
+    font-size: 25px;
+    margin-bottom: 0px;
+}
+.game-board-heading h2 {
+    font-size: 45px;
+    font-family: 'Courier New', Courier, monospace;
+    height: 30px;
+    width: 100%;
+    text-align: center;
 }
 .game-board {
     height: 600px;
@@ -63,7 +70,6 @@ body {
 .marker {
     cursor: pointer;
     font-size: 100px;
-    color: black;
 }
 
 

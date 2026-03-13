@@ -66,11 +66,13 @@ const ttt = (() => {
         }
     }
 
-    const gameEnd = (someoneWon, draw, blocks) => {
+    const gameEnd = (someoneWon, draw) => {
         if (someoneWon) {
             console.log(`${currentPlayer.name} with marker '${currentPlayer.marker}' won!`);
+            document.querySelector("h2").textContent = `${currentPlayer.name} with marker '${currentPlayer.marker}' won!`;
             gameActive = false;
         } else if (draw) {
+            document.querySelector("h2").textContent =  "It's a Draw..."
             console.log("game draw!");
             gameActive = false;
         }
@@ -81,6 +83,7 @@ const ttt = (() => {
         blocks.forEach(block => {
             iconTag = block.querySelector(".marker");
             iconTag.classList.remove("fa-o", "fa-x");
+            document.querySelector("h2").textContent = "-----";
         });
         tictactoeArray = [];
     }
@@ -205,18 +208,10 @@ const ttt = (() => {
         return [-1, -1];
     }
 
-    // finally, applying some css
-    const changeModeIcon = document.querySelector(".change-mode");
-    changeModeIcon.addEventListener("click", () => {
-        if (changeModeIcon.classList.contains("fa-sun")) {
-            changeModeIcon.classList.remove("fa-sun");
-            changeModeIcon.classList.add("fa-moon");
-        } else {
-            // If it's not a sun, we assume it's a moon (or nothing)
-            changeModeIcon.classList.remove("fa-moon");
-            changeModeIcon.classList.add("fa-sun");
-        }
-    });
+    const footer = document.querySelector(".footer");
+    footer.addEventListener("click", () => {
+        window.open("https://github.com/hellopiyushlab/tictactoe", "_blank");
+    })
     
     
     return {
